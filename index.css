@@ -98,6 +98,7 @@ body {
             align-items: center;
             justify-content: space-between;
             padding-top: 10px;
+	    padding-top: 20px;
         }
 
         #place {
@@ -159,7 +160,7 @@ body {
         .feed-item-title {
 		            justify-content: space-between;
             align-items: center;
-            font-size: 2rem;
+            font-size: 3rem;
             font-weight: 800;
             color: #fff;
 	}
@@ -167,4 +168,5 @@ body {
 	a {
   		color: white;
 		text-decoration: none;
+		font-size: 3rem;
 	}
