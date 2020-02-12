@@ -14,7 +14,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>Weather Example for piSignage</title>
     <script src="https://cdn.rawgit.com/maxdow/skycons/master/skycons.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Lato:100,300" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:100,300" rel="stylesheet"/>
 
     <style>
 
@@ -24,7 +24,7 @@
             width: 100%;
             margin: 0;
             color: white;
-            font-family: "Lato", sans-serif;
+            font-family: "Opoen-Sans", sans-serif;
             /*background-color: black;*/
             background: linear-gradient(to right, rgb(33, 147, 176), rgb(109, 213, 237));
             /*
@@ -62,7 +62,7 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            font-size: 1rem;
+            font-size: 2rem;
             font-weight: 800;
             color: #fff;
             padding-left: 30px;
@@ -112,7 +112,7 @@
             justify-content: space-around;
             align-items: center;
             font-weight: 800;
-            font-size: xx-large;
+            font-size: xxx-large;
         }
 
         .forecast-temp {
@@ -121,7 +121,7 @@
             align-items: center;
             font-weight: 800;
             justify-content: space-evenly;
-            font-size: x-large;
+            font-size: xx-large;
         }
 
         .citation {
@@ -152,12 +152,12 @@
 
     <div id="forecast-container"></div>             <!--Forecast data is added here-->
 </div>
-<i id="message" class="citation">Weather forecast powered by Dark Sky</i>
+<i id="message" class="citation"></i>
 
 
 <script>
     "use strict";
-    const city = "hawaii";
+    const city = "louisville,kentucky";
     const units = "auto";
     const lang = "en";
     const forecastDays = 5;
