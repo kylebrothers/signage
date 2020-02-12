@@ -16,12 +16,10 @@ body {
 .item-2, 
 .item-3 {
 	position: absolute;
-  display: block;
+  	display: block;
 	top: 2em;
-  
-  width: 60%;
-  
-  font-size: 2em;
+  	width: 80%;
+ 	font-size: 2em;
 
 	animation-duration: 20s;
 	animation-timing-function: ease-in-out;
