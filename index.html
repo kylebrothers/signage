@@ -7,7 +7,23 @@
 <body>
 
   <div class="item-1">
-    <script type='text/javascript' src='https://darksky.net/widget/graph-bar/38.1412,-85.7769/us12/en.js?width=100%&height=800&title=Full Forecast&textColor=333333&bgColor=ransparent&transparency=false&skyColor=undefined&fontFamily=Sans-Serif&customFont=&units=us&timeColor=333333&tempColor=333333&currentDetailsOption=true'></script>
+    <div class="container">
+      <div class="temperature-container">
+          <span id="place">Weather Today</span>
+          <div class="temperature">
+              <canvas id="icon0" width="75" height="75"></canvas>
+              <span id="temperature"></span>
+              <div class="max-min-temperature">
+                  <span id="max-temperature"></span>
+                  <span id="min-temperature"></span>
+              </div>
+          </div>
+          <div class="description">
+              <span id="summary"></span>
+          </div>
+        </div>
+      <div id="forecast-container"></div>             <!--Forecast data is added here-->
+    </div>
   </div>  
 
   <div class="item-2">
@@ -17,7 +33,134 @@
   <div class="item-3">
     You take the red pill - you stay in Wonderland and I show you how deep the rabbit-hole goes.
   </div>
-  
+
+  <script>
+    "use strict";
+    const city = "louisville,kentucky";
+    const units = "auto";
+    const lang = "en";
+    const forecastDays = 5;
+
+    const temperature = document.getElementById("temperature");
+    const icon0 = document.getElementById("icon0");
+    const maxTemperature = document.getElementById("max-temperature");
+    const minTemperature = document.getElementById("min-temperature");
+    const summary = document.getElementById("summary");
+    const place = document.getElementById("place");
+
+    const forecastContainer = document.getElementById("forecast-container");
+    const message = document.getElementById("message");
+
+    const skycons = new Skycons({ color: "#fff" });
+
+    getWeather();
+    setInterval(getWeather, 600000);
+
+    function getWeather() {
+        fetch(
+            `https://pisignage.com/api/getweather?place=${city}&units=${units}&lang=${lang}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": " application/json"
+                },
+                mode: "cors"
+            }
+        )
+            .then(res => res.json())
+            .then(data => {
+
+                if (!(data && data.success)) {
+                    if (data.stat_message) message.textContent = data.stat_message;
+                    return console.log("Could not get weather data, reason: " + data.stat_message);
+                }
+
+                message.textContent = "";
+                const weatherData = data.data;
+                //console.log(weatherData);
+
+                if (weatherData.cityName.indexOf(",") > -1) {
+                    weatherData.cityName = weatherData.cityName.slice(
+                        0,
+                        weatherData.cityName.indexOf(",")
+                    );
+                } else {
+                    weatherData.cityName = weatherData.cityName;
+                }
+
+                if (place)
+                    place.textContent = weatherData.cityName;
+
+                if (temperature)
+                    temperature.textContent = weatherData.currently.temperature.toFixed(1); //+ "°C";
+                if (maxTemperature)
+                    maxTemperature.textContent = weatherData.daily.data[0].temperatureMax.toFixed(0);
+                if (minTemperature)
+                    minTemperature.textContent = weatherData.daily.data[0].temperatureMin.toFixed(0);
+                if (summary)
+                    summary.textContent = weatherData.currently.summary;//.toUpperCase();
+                if (icon0)
+                    skycons.add(
+                        icon0,
+                        weatherData.currently.icon.toUpperCase().replace(/-/g, "_")
+                    );
+                let days = weatherData.daily.data;
+
+                if (forecastContainer)
+                    while (forecastContainer.firstChild) {
+                        forecastContainer.removeChild(forecastContainer.firstChild);
+                    }
+                for (var i = 1; i <= forecastDays; i++) {
+                    var coverDiv, dayDiv, tempDiv, canvasDiv, numDiv;
+
+                    canvasDiv = document.createElement("canvas");
+                    canvasDiv.width = 32;
+                    canvasDiv.height = 32;
+                    skycons.add(
+                        canvasDiv,
+                        days[i].icon.toUpperCase().replace(/-/g, "_")
+                    );
+                    canvasDiv.style.paddingRight = "5px"
+                    numDiv = document.createElement("div");
+                    numDiv.textContent = ((days[i].temperatureMax + days[i].temperatureMin) / 2).toFixed(0);
+
+                    tempDiv = document.createElement("div");
+                    tempDiv.setAttribute("class", "forecast-temp");
+                    tempDiv.appendChild(canvasDiv);
+                    tempDiv.appendChild(numDiv);
+
+                    dayDiv = document.createElement("div");
+                    dayDiv.textContent = convertToWeekday(days[i].time);
+                    ;
+                    coverDiv = document.createElement("div");
+                    coverDiv.setAttribute("class", "day");
+                    coverDiv.appendChild(dayDiv);
+                    coverDiv.appendChild(tempDiv);
+
+                    forecastContainer.appendChild(coverDiv);
+                }
+
+                skycons.play();
+            }).catch(function(error) {
+                message.textContent = error;
+            });
+    }
+
+    function convertToWeekday(sec) {
+        var toWeekday = new Date(sec * 1000);
+        var days = [
+            "Sun",
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat"
+        ];
+        var weekday = days[toWeekday.getDay()];
+        return weekday;
+    }
+</script>
 </body>
 </html>
 
